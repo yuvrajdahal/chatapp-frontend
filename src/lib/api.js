@@ -1,8 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import axios from "axios";
-
-export const isProd = () => window.location.hostname !== "localhost";
-
+const url =
+  import.meta.env.VITE_ENV === "development"
+    ? import.meta.env.VITE_DEV_BASE_URL
+    : import.meta.env.VITE_PROD_BASE_URL;
+export const isProd = () => import.meta.env.VITE_ENV !== "development";
 const api = axios.create({
   headers: {
     "Content-Type": "application/json",
@@ -58,13 +60,10 @@ const axiosBaseQuery =
       };
     }
   };
-console.log(import.meta.env.VITE_PROD_BASE_URL);
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: axiosBaseQuery({
-    baseUrl: isProd()
-      ? import.meta.env.VITE_PROD_BASE_URL
-      : import.meta.env.VITE_DEV_BASE_URL,
+    baseUrl: url,
   }),
   Types: ["Auth", "User", "Chats", "ChatSocket"],
   endpoints: (builder) => ({}),
